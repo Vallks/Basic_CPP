@@ -31,4 +31,6 @@ int main()
     cout << "\t\t\t\t\t\tФазан\n";
 
     SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+
+    return 0;
 }
