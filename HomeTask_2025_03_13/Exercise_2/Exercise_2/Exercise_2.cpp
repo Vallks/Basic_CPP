@@ -2,7 +2,7 @@
 
 using namespace std;
 
-double getSal(double prod) // лень писать 3 раза ифа
+double getSal(double prod) // лень писать 3 раза ифы
 {
     if (prod < 500)
     {
