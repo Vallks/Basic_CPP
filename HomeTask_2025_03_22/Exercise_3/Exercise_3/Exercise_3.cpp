@@ -24,7 +24,7 @@ int main()
 {
 	setlocale(LC_ALL, "RU");
 
-	cout << "Введите 7 числел через пробел";
+	cout << "Введите 7 числел через пробел" << endl;
 
 	int* ar = new int[countAr];
 	int max;
@@ -36,7 +36,7 @@ int main()
 
 	cout << getMax(ar) << " перебором" << endl; // можно было бы прям тут сделать, и еще и for (int x : ar) перебором, но не стал тк тренируюсь в указатели 
 
-	int* maxPtr = max_element(ar, ar + 7);
+	int* maxPtr = max_element(ar, ar + countAr);
 
 	cout << *maxPtr << " используя STL" << endl; //взял функцию из algorithm просто для тренировки
 
