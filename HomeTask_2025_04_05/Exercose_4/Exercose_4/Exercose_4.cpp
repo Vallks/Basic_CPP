@@ -4,11 +4,14 @@ using namespace std;
 
 int main()
 {
-    for (int row = 0; row < 10; row++) {
-        for (char col = 'A'; col <= 'J'; col++) {
-            std::cout << col << row << " ";
+    for (int i = 0; i < 10; i++) 
+{
+        for (char j = 'A'; j <= 'J'; j++) {
+            std::cout << j << i << " ";
         }
         std::cout << "\n";
     }
+
+    return 0;
 }
 
