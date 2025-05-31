@@ -1,4 +1,4 @@
-﻿#include <iostream>
+﻿#include <iostream> //Алгоритм поиска коров и быков своровал поиск уникальных чисел переделал на свой перебором
 #include <cstdlib>
 #include <ctime>
 
@@ -79,7 +79,7 @@ void playGame(int chisl, int popytk) {
             cows++;
         }
     }
-    cows -= bulls; 
+    cows -= bulls;
 
     cout << "Быки - " << bulls << ", Коровы - " << cows << endl;
 
