@@ -20,6 +20,19 @@ void print_array(int* ptr, int size)
     cout << endl;
     return;
 }
+void delete_array(int*& arr)
+{
+    if (arr) {
+        delete[]arr;
+        arr = nullptr;
+        cout << "Осчистили массив \n";
+    }
+    else
+    {
+        cout << " Массив уже пуст \n";
+    }
+    return;
+}
 void razbit_arr(int* arr, int size)
 {
     int size0 = 0, size_pos = 0, size_neg = 0;
@@ -59,6 +72,9 @@ void razbit_arr(int* arr, int size)
     print_array(arr_neg, size_neg);
     cout << "Нулевые " << endl;
     print_array(arr0, size0);
+    delete_array(arr_pos);
+    delete_array(arr_neg);
+    delete_array(arr0);
     return;
 }
 int main()
