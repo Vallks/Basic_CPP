@@ -18,26 +18,6 @@ void removeSpaces(char* str)
     *dest = '\0';
 }
 
-bool checkSkobki(const char* start, const char* end) {
-    // Пропускаем унарные + и - в начале
-    while (start < end && (*start == '+' || *start == '-')) 
-    {
-        start++;
-    }
-
-    // Проверяем, что последний символ перед закрывающей скобкой - не операция
-    if (start < end)
-    {
-        const char last = *(end - 1);
-        if (last == '+' || last == '-' || last == '*' || last == '/') 
-        {
-            cout << "Ошибка: Выражение в скобках заканчивается операцией '" << last << "'\n";
-            return false;
-        }
-    }
-    return true;
-}
-
 bool validation(const char* str) {
     // Проверка на пустую строку
     if (*str == '\0') 
@@ -92,31 +72,32 @@ bool validation(const char* str) {
         // Проверка выражений в скобках
         if (*ptr == '(') 
         {
-            const char* StartS = ptr + 1;
-            const char* EndS = StartS;
+            const char* cptr = ptr + 1; //Первый знак после первой скобки
             int balance = 1;
 
             // Находим закрывающую скобку
-            while (*EndS != '\0' && balance > 0)
+            while (*cptr != '\0' && balance > 0)
             {
-                if (*EndS == '(')
+                if (*cptr == '(')
                 {
                     balance++;
                 }
-                else if (*EndS == ')')
+                else if (*cptr == ')')
                 {
                     balance--;
                 }
-                EndS++;
+                cptr++;
             }
 
-            if (balance != 0) {
+            if (balance != 0) 
+            {
                 cout << "Ошибка: Несбалансированные скобки\n";
                 return false;
             }
 
-            // Проверяем выражение внутри скобок
-            if (!checkSkobki(StartS, EndS - 1)) {
+            if (*(cptr - 2) == '+' || *(cptr - 2) == '-' || *(cptr - 2) == '*' || *(cptr - 2) == '/') //-2 так как двигали указатель после скобки
+            {
+                cout << "Ошибка: Выражение в скобках заканчивается операцией '" << *(cptr - 2) << "'\n";
                 return false;
             }
         }
