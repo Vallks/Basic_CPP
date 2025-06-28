@@ -97,7 +97,7 @@ bool validation(const char* str) {
             int balance = 1;
 
             // Находим закрывающую скобку
-            while (*EndS != '\0' && balance > 0)
+            while (*EndS && balance > 0)
             {
                 if (*EndS == '(')
                 {
