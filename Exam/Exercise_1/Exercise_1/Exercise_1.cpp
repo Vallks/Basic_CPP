@@ -75,6 +75,12 @@ bool validation(const char* str) {
             const char* cptr = ptr + 1; //Первый знак после первой скобки
             int balance = 1;
 
+            if (*cptr == ')')
+            {
+                cout << "Ошибка: Пустые скобки '()'\n";
+                return false;
+            }
+
             // Находим закрывающую скобку
             while (*cptr != '\0' && balance > 0)
             {
