@@ -38,6 +38,7 @@ int main()
 		sum += arr[i];
 	}
 	cout << sum;
+	delete[] arr;
 	return 0;
 }
 
