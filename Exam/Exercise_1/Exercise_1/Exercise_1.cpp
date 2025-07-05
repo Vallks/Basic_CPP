@@ -57,7 +57,7 @@ bool validation(const char* str) {
                 return false;
             }
             flagDec = true;
-            if (!(ptr > str && isdigit(*(ptr - 1)) || !(*(ptr + 1) && isdigit(*(ptr + 1))))) 
+            if (!(ptr > str && isdigit(*(ptr - 1)) || !(*(ptr + 1) != '\0' && isdigit(*(ptr + 1)))))
             {
                 cout << "Ошибка: Некорректное использование точки\n";
                 return false;
