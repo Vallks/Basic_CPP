@@ -2,7 +2,7 @@
 #include <cctype>
 using namespace std;
 
-int prioritet3(const char*&); //иначе не смог соблюсти порядок вызова
+double prioritet3(const char*&); //иначе не смог соблюсти порядок вызова
 
 void removeSpaces(char* str) 
 {
@@ -19,21 +19,19 @@ void removeSpaces(char* str)
 }
 
 bool validation(const char* str) {
-    // Проверка на пустую строку
+    
     if (*str == '\0') 
     {
         cout << "Ошибка: Пустая строка\n";
         return false;
     }
 
-    // Проверка, что строка не начинается с * или /
     if (*str == '*' || *str == '/') 
     {
         cout << "Ошибка: Выражение не может начинаться с '" << *str << "'\n";
         return false;
     }
 
-    // Проверка, что строка не заканчивается операцией
     const char* end = str + strlen(str) - 1;
     if (*end == '+' || *end == '-' || *end == '*' || *end == '/') 
     {
@@ -41,17 +39,35 @@ bool validation(const char* str) {
         return false;
     }
 
-    // Проверка на недопустимые символы и некорректные комбинации операций
     const char* ptr = str;
+    bool flagDec = false;
     while (*ptr) 
     {
-        if (!isdigit(*ptr) && *ptr != '+' && *ptr != '-' && *ptr != '*' && *ptr != '/' && *ptr != '(' && *ptr != ')')
+        if (!isdigit(*ptr) && *ptr != '+' && *ptr != '-' && *ptr != '*' && *ptr != '/' && *ptr != '(' && *ptr != ')' && *ptr != '.')
         {
             cout << "Ошибка: Недопустимый символ '" << *ptr << "'\n";
             return false;
         }
 
-        // Проверка на некорректные комбинации операций
+        if (*ptr == '.') 
+        {
+            if (flagDec) 
+            {
+                cout << "Ошибка: Несколько точек в числе\n";
+                return false;
+            }
+            flagDec = true;
+            if (!(ptr > str && isdigit(*(ptr - 1)) || !(*(ptr + 1) && isdigit(*(ptr + 1))))) 
+            {
+                cout << "Ошибка: Некорректное использование точки\n";
+                return false;
+            }
+        }
+        else if (*ptr == '+' || *ptr == '-' || *ptr == '*' || *ptr == '/' ||
+            *ptr == '(' || *ptr == ')') {
+            flagDec = false; // Сброс флага точки при операторе или скобке
+        }
+
         if (*ptr == '*' || *ptr == '/')
         {
             const char next = *(ptr + 1);
@@ -62,14 +78,12 @@ bool validation(const char* str) {
             }
         }
 
-        // Проверка на унарные операции
         if ((*ptr == '+' || *ptr == '-') && (*(ptr + 1) == '*' || *(ptr + 1) == '/'))
         {
             cout << "Ошибка: Некорректная комбинация операций '" << *ptr << *(ptr + 1) << "'\n";
             return false;
         }
 
-        // Проверка выражений в скобках
         if (*ptr == '(') 
         {
             const char* cptr = ptr + 1; //Первый знак после первой скобки
@@ -81,7 +95,6 @@ bool validation(const char* str) {
                 return false;
             }
 
-            // Находим закрывающую скобку
             while (*cptr != '\0' && balance > 0)
             {
                 if (*cptr == '(')
@@ -122,19 +135,31 @@ bool validation(const char* str) {
     }
 }*/
 
-int parseNumber(const char*& ptr) 
+double parseNumber(const char*& ptr)
 {
     //skipSpaces(ptr);
-    int num = 0;
+    double num = 0.;
+    double decNum = 0.0;
+    double div = 10.0;
     while (isdigit(*ptr)) 
     {
-        num = num * 10 + (*ptr - '0'); // Можно было бы сделать чере atoi но этот вариант я стырил и он мне понравился больше, не надо создавать доп переменную со строкой да и нет ошибки по 0 если не разобралось
+        num = num * 10.0 + (*ptr - '0'); // Можно было бы сделать чере atoi но этот вариант я стырил и он мне понравился больше, не надо создавать доп переменную со строкой да и нет ошибки по 0 если не разобралось
         ptr++;
     }
-    return num;
+    //return num;
+
+    if (*ptr == '.') {
+        ptr++;
+        while (isdigit(*ptr)) {
+            decNum += (*ptr - '0') / div;
+            div *= 10.0;
+            ptr++;
+        }
+    }
+    return num + decNum;
 }
 
-int prioritet1(const char*& ptr) // 1 приоритет для скобок и унарных знаков
+double prioritet1(const char*& ptr) // 1 приоритет для скобок и унарных знаков
 {
     //skipSpaces(ptr);
     int znak = 1;
@@ -146,7 +171,7 @@ int prioritet1(const char*& ptr) // 1 приоритет для скобок и 
         //skipSpaces(ptr);
     }
 
-    int result;
+    double result;
     if (*ptr == '(') 
     {
         ptr++;
@@ -167,16 +192,16 @@ int prioritet1(const char*& ptr) // 1 приоритет для скобок и 
     return znak * result;
 }
 
-int prioritet2(const char*& ptr) // 2 приоритет это * и /
+double prioritet2(const char*& ptr) // 2 приоритет это * и /
 {
-    int result = prioritet1(ptr);
+    double result = prioritet1(ptr);
     //skipSpaces(ptr);
 
     while (*ptr == '*' || *ptr == '/') 
     {
         char znak = *ptr++;
         //skipSpaces(ptr);
-        int res = prioritet1(ptr);
+        double res = prioritet1(ptr);
 
         if (znak == '*')
         {
@@ -191,16 +216,16 @@ int prioritet2(const char*& ptr) // 2 приоритет это * и /
     return result;
 }
 
-int prioritet3(const char*& ptr) // 3 приоритет это + и -
+double prioritet3(const char*& ptr) // 3 приоритет это + и -
 {
-    int result = prioritet2(ptr);
+    double result = prioritet2(ptr);
     //skipSpaces(ptr);
 
     while (*ptr == '+' || *ptr == '-') 
     {
         char znak = *ptr++;
         //skipSpaces(ptr);
-        int res = prioritet2(ptr);
+        double res = prioritet2(ptr);
 
         if (znak == '+')
         {
@@ -221,7 +246,7 @@ int main()
     setlocale(LC_ALL, "RU");
     
     char str[256];
-    cout << "Введите выражение (доступны целые числа, +, -, *, /, унарные +-, скобки): ";
+    cout << "Введите выражение (доступны числа, +, -, *, /, унарные +-, скобки): ";
     cin.getline(str, sizeof(str)); // стринг не хотелось использовать
     
     removeSpaces(str); //Удаляем пробелы и табы для проверки валидации строки, через скипспейс уже не получится проверить
@@ -231,7 +256,7 @@ int main()
     }
 
     const char* ptr = str;
-    int result = prioritet3(ptr);
+    double result = prioritet3(ptr);
     cout << "Результат: " << result << "\n";
 
     return 0;
