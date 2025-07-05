@@ -209,6 +209,12 @@ double prioritet2(const char*& ptr) // 2 приоритет это * и /
         }
         else
         {
+            if (res == 0.0) 
+            {
+                cout << "Ошибка: Деление на ноль\n"; //чуть про ноль не забыл
+                exit(1);
+            }
+            
             result /= res;
         }
         //skipSpaces(ptr);
